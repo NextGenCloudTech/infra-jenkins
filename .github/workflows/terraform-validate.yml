@@ -27,7 +27,7 @@ jobs:
 
       - name: Terraform format check
         run: |
-          terraform fmt -check -diff=$(git diff --name-only ${{ github.base_ref }})
+          terraform fmt -check -diff=$(git diff --name-only origin/main)
 
       - name: Terraform Docs check
         run: |
