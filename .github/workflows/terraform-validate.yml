@@ -1,0 +1,42 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+      - main  # Adjust to your main branch name
+
+jobs:
+  terraform-validate:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0  # Adjust to the Terraform version you are using
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate -check-variables=false
+
+      - name: Terraform format check
+        run: |
+          terraform fmt -check -diff=$(git diff --name-only ${{ github.base_ref }})
+
+      - name: Terraform Docs check
+        run: |
+          terraform-docs check $(git diff --name-only ${{ github.base_ref }})
+
+      - name: Check if Terraform plan is empty
+        run: |
+          terraform plan -detailed-exitcode || test $? -eq 2
+
+      - name: Check if there are any changes
+        run: |
+          git diff --exit-code
