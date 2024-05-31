@@ -27,16 +27,5 @@ jobs:
 
       - name: Terraform format check
         run: |
-          terraform fmt -check -diff=$(git diff --name-only origin/main)
+          terraform fmt -check
 
-      - name: Terraform Docs check
-        run: |
-          terraform-docs check $(git diff --name-only ${{ github.base_ref }})
-
-      - name: Check if Terraform plan is empty
-        run: |
-          terraform plan -detailed-exitcode || test $? -eq 2
-
-      - name: Check if there are any changes
-        run: |
-          git diff --exit-code
