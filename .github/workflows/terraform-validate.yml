@@ -23,7 +23,7 @@ jobs:
         run: terraform init
 
       - name: Terraform validate
-        run: terraform validate -check-variables=false
+        run: terraform validate
 
       - name: Terraform format check
         run: |
